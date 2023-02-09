@@ -26,14 +26,16 @@ closeIcon.addEventListener("click", () => {
     popupBox.classList.remove("show");
 });
 
+/*Criação de notas*/
+
 function showNotes(){
     document.querySelectorAll(".note").forEach(note => note.remove());
     notes.forEach((note, index) => {
         let liTag = `<li class="note">
                         <div class="details">
                         <div class="liga-desliga">
-                        <input type="checkbox" class="liga-desliga__checkbox" id="liga-desliga">
-                        <label for="liga-desliga" class="liga-desliga__botao"></label>
+                        <input type="checkbox" class="liga-desliga__checkbox" id="liga-desliga-${index}" onclick="toggleCheckbox(${index})" ${note.checked ? 'checked' : ""}>
+
                         </div>  
                             <p>${note.title}</p>
                             <span>${note.description} </span>
@@ -72,6 +74,13 @@ function deleteNote(noteId){
     showNotes();       
 }
 
+function toggleCheckbox(noteId){
+    notes[noteId].checked = !notes[noteId].checked
+    console.log(notes[noteId].checked)
+    localStorage.setItem("notes", JSON.stringify(notes));    
+    showNotes();
+}
+
 function updateNote(noteId, title, desc) {
     isUpdate = true;
     updateId = noteId
@@ -93,9 +102,9 @@ addBtn.addEventListener("click", e => {
         month = months[dateObj.getMonth()],
         day = dateObj.getDate(),
         year = dateObj.getFullYear();
-
+        
         let noteInfo = {
-            title: noteTitle, description: noteDesc,
+            title: noteTitle, description: noteDesc, checked: false,
             date: `${day} de ${month} de ${year}`
         }
         if(!isUpdate){
